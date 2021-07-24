@@ -23,6 +23,7 @@ spec:
         - name: kube-monitor
           image: amitkshirsagar13/kube-monitor:latest
           imagePullPolicy: IfNotPresent
+	        serviceAccountName: kube-monitor-account
 #          ports:
 #            - containerPort: 3000
 #              name: http-grafana

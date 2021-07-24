@@ -9,4 +9,4 @@ roleRef:
   name: kube-monitor-role
 subjects:
   - kind: ServiceAccount
-    name: kube-monitor-serviceAccount
+    name: kube-monitor-account
