@@ -73,7 +73,7 @@ metadata:
   namespace: monitoring
 spec:
   rules:
-  - host: grafana.dm-labs.local
+  - host: grafana.k8cluster.local
     http:
       paths:
       - backend:

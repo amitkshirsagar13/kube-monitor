@@ -104,7 +104,7 @@ metadata:
 spec:
   rules:
   # Use the host you used in your kubernetes Ingress Configurations
-  - host: prom.dm-labs.local
+  - host: prom.k8cluster.local
     http:
       paths:
       - backend:
