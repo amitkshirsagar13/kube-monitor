@@ -25,12 +25,11 @@ public class PodTracer extends SpanProvider {
         final String podName = event.getMetadata().getName();
 
         final String spanContextId = getSpanContextId(nameSpace, podName);
-        final SpanContext spanContext = buildOrGetSpanContext(SPAN, POD, spanContextId);
+        final SpanContext spanContext = buildOrGetSpanContext(SPAN, POD, spanContextId, clusterName, nameSpace);
         Tracer tracer = GlobalTracer.get();
         Tracer.SpanBuilder spanBuilder = tracer.buildSpan(POD.name());
         spanBuilder.asChildOf(spanContext);
         Span podStatus = spanBuilder.start();
-        podStatus.setBaggageItem("clusterName", clusterName);
 
         final String resourceVersion = event.getMetadata().getResourceVersion();
         final List<String> imageList = event.getSpec().getContainers().stream().map(V1Container::getImage).collect(Collectors.toList());

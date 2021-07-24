@@ -27,15 +27,17 @@ public abstract class SpanProvider {
         modelMapper = new ModelMapper();
     }
 
-    public SpanContext buildOrGetSpanContext(EVENT_TYPE eventType, SPAN span, String spanContextId) {
+    public SpanContext buildOrGetSpanContext(EVENT_TYPE eventType, SPAN span, String spanContextId, String clusterName, String nameSpace) {
         final SpanContext parentSpanContext = spanContextMap.computeIfAbsent(spanContextId, spanContext -> {
             Tracer tracer = GlobalTracer.get();
             Tracer.SpanBuilder spanBuilder = tracer.buildSpan(span.name())
                     .withTag(Tags.SPAN_KIND.getKey(), span.name());
             Span traceSpan = spanBuilder.start();
+            traceSpan.setOperationName(nameSpace);
             Tags.COMPONENT.set(traceSpan, spanContextId);
             traceSpan.setTag("EVENT_TYPE", eventType.name());
             traceSpan.setTag("context", spanContextId);
+            traceSpan.setTag("clusterName", clusterName);
             traceSpan.finish();
             return traceSpan.context();
         });
