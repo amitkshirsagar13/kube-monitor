@@ -44,7 +44,7 @@ public class PodTracer extends SpanProvider {
         statusList.stream().forEach(status -> {
             Tracer tracerStatus = GlobalTracer.get();
             Tracer.SpanBuilder spanBuilderStatus = tracerStatus.buildSpan(spanContextId);
-            spanBuilderStatus.asChildOf(spanContext);
+            spanBuilderStatus.asChildOf(podStatus);
             Span statusCondition = spanBuilder.start();
             statusCondition.setOperationName(status.getType());
             statusCondition.log(String.format("TransitionTime: %s", getDisplayValue(status.getLastTransitionTime())));
