@@ -185,7 +185,7 @@ metadata:
   namespace: monitoring
 spec:
   rules:
-  - host: kube-state-metrics.dm-labs.local
+  - host: kube-state-metrics.k8cluster.local
     http:
       paths:
       - backend:
@@ -195,7 +195,7 @@ spec:
               number: 8080
         path: /
         pathType: Prefix
-  - host: kube-state-telemetry.dm-labs.local
+  - host: kube-state-telemetry.k8cluster.local
     http:
       paths:
       - backend:

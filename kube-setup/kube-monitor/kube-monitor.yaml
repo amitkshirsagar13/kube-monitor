@@ -1,0 +1,91 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: grafana
+  name: grafana
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      securityContext:
+        fsGroup: 472
+        supplementalGroups:
+          - 0
+      containers:
+        - name: grafana
+          image: grafana/grafana:7.5.2
+          imagePullPolicy: IfNotPresent
+#          ports:
+#            - containerPort: 3000
+#              name: http-grafana
+#              protocol: TCP
+#          readinessProbe:
+#            failureThreshold: 3
+#            httpGet:
+#              path: /robots.txt
+#              port: 3000
+#              scheme: HTTP
+#            initialDelaySeconds: 10
+#            periodSeconds: 30
+#            successThreshold: 1
+#            timeoutSeconds: 2
+#          livenessProbe:
+#            httpGet:
+#              path: /actuator/health/liveness
+#              port: 8080
+#            failureThreshold: 3
+#            initialDelaySeconds: 5
+#            periodSeconds: 5
+#            successThreshold: 1
+#            tcpSocket:
+#              port: 3000
+#            timeoutSeconds: 1
+          resources:
+            limit:
+              cpu: 100m
+              memory: 256Mi
+            requests:
+              cpu: 250m
+              memory: 750Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-monitor-service
+  namespace: kube-monitor
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: kube-monitor
+  selector:
+    app: kube-monitor
+  sessionAffinity: None
+  type: LoadBalancer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+  name: kube-monitor-ingress
+  namespace: kube-monitor
+spec:
+  rules:
+    - host: kube-monitor.k8cluster.local
+      http:
+        paths:
+          - backend:
+              service:
+                name: kube-monitor-service
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix

@@ -9,6 +9,9 @@ import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.availability.ApplicationAvailability;
+import org.springframework.boot.availability.LivenessState;
+import org.springframework.boot.availability.ReadinessState;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
@@ -34,10 +37,13 @@ public class ClusterMonitorApplication {
 
     private List<EventMonitor> eventMonitorList;
 
-
+    @Autowired
+    private ApplicationAvailability applicationAvailability;
 
     @EventListener(ApplicationReadyEvent.class)
-    public void startMonitoringAfterStartup() throws IOException, ApiException {
+    public void startMonitoringAfterStartup() throws IOException {
+        availability();
+
         ApiClient client  = Config.defaultClient();
         OkHttpClient newClient = client.getHttpClient()
                 .newBuilder()
@@ -58,6 +64,13 @@ public class ClusterMonitorApplication {
                 }
             });
         }
+    }
+
+    private void availability() {
+        // Available as a component in the application context
+        ApplicationAvailability availability;
+        LivenessState livenessState = applicationAvailability.getLivenessState();
+        ReadinessState readinessState = applicationAvailability.getReadinessState();
     }
 
     private void initMap(CoreV1Api api) {
