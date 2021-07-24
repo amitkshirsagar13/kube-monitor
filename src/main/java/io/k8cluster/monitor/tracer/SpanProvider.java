@@ -29,11 +29,12 @@ public abstract class SpanProvider {
     public SpanContext buildOrGetSpanContext(EVENT_TYPE eventType, SPAN span, String spanContextId) {
         final SpanContext parentSpanContext = spanContextMap.computeIfAbsent(spanContextId, spanContext -> {
             Tracer tracer = GlobalTracer.get();
-            Tracer.SpanBuilder spanBuilder = tracer.buildSpan(spanContext)
+            Tracer.SpanBuilder spanBuilder = tracer.buildSpan(span.name())
                     .withTag(Tags.SPAN_KIND.getKey(), span.name());
             Span traceSpan = spanBuilder.start();
-            Tags.COMPONENT.set(traceSpan, span.name());
+            Tags.COMPONENT.set(traceSpan, spanContextId);
             traceSpan.setTag("EVENT_TYPE", eventType.name());
+            traceSpan.setTag("context", spanContextId);
             traceSpan.finish();
             return traceSpan.context();
         });
