@@ -8,3 +8,12 @@ management:
       enabled: true
     readinessState:
       enabled: true
+
+opentracing:
+  jaeger:
+    service-name: kube-monitor
+    enabled: TRUE
+    udp-sender:
+      host: jaeger-agent.kube-monitor.svc.cluster.local
+
+# opentracing.jaeger.udp-sender.host: jaeger-agent.kube-monitor.svc.cluster.local

@@ -1,4 +1,4 @@
-package io.k8cluster.monitors;
+package io.k8cluster.monitor.monitors;
 
 import com.google.gson.Gson;
 import io.kubernetes.client.openapi.ApiException;

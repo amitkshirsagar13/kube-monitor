@@ -1,4 +1,4 @@
-package io.k8cluster.monitors;
+package io.k8cluster.monitor.monitors;
 
 import com.google.gson.reflect.TypeToken;
 import io.kubernetes.client.openapi.ApiClient;
@@ -95,7 +95,7 @@ public class NodeMonitor extends EventMonitor {
 
     private static void getCondition(String conditionType, Map<String, V1NodeCondition> v1NodeConditionMap) {
         if(Objects.nonNull(v1NodeConditionMap.get(conditionType))) {
-            log.info(" - Type: {}| Reason: {}| Status: {}", v1NodeConditionMap.get(conditionType).getType(), v1NodeConditionMap.get(conditionType).getReason(), v1NodeConditionMap.get(conditionType).getStatus());
+            log.info(" - Type: {}| Reason: {}| V1Status: {}", v1NodeConditionMap.get(conditionType).getType(), v1NodeConditionMap.get(conditionType).getReason(), v1NodeConditionMap.get(conditionType).getStatus());
         }
     }
 

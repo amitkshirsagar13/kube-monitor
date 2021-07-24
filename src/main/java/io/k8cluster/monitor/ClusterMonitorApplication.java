@@ -1,5 +1,9 @@
-package io.k8cluster.monitors;
+package io.k8cluster.monitor;
 
+import io.k8cluster.monitor.monitors.EventMonitor;
+import io.k8cluster.monitor.monitors.NodeMonitor;
+import io.k8cluster.monitor.monitors.PodMonitor;
+import io.k8cluster.monitor.monitors.PvMonitor;
 import io.kubernetes.client.openapi.ApiClient;
 import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
@@ -74,7 +78,7 @@ public class ClusterMonitorApplication {
     }
 
     private void initMap(CoreV1Api api) {
-        eventMonitorList = Arrays.asList(nodeMonitor, podMonitor, pvMonitor);
+        eventMonitorList = Arrays.asList(podMonitor);
         eventMonitorList.parallelStream().forEach(eventMonitor-> {
             try {
                 eventMonitor.setResourceVersion(eventMonitor.resourceVersion(api));

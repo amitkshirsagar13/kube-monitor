@@ -1,4 +1,4 @@
-package io.k8cluster.monitors;
+package io.k8cluster.monitor.monitors;
 
 import io.kubernetes.client.openapi.ApiException;
 import io.kubernetes.client.openapi.apis.CoreV1Api;
