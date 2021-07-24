@@ -1,5 +1,6 @@
 package io.k8cluster.monitor.tracer;
 
+import io.k8cluster.monitor.tracer.common.V1Status;
 import io.k8cluster.monitor.tracer.values.EVENT_TYPE;
 import io.k8cluster.monitor.tracer.values.SPAN;
 import io.opentracing.Span;
@@ -51,5 +52,22 @@ public abstract class SpanProvider {
 
     public String getDisplayValue(String displayValue) {
         return StringUtils.isNotEmpty(displayValue) ? displayValue : "No Value";
+    }
+
+    public void buildStatusSpan(String spanContextId, Tracer.SpanBuilder spanBuilder, Span podStatus, V1Status status) {
+        Tracer tracerStatus = GlobalTracer.get();
+        Tracer.SpanBuilder spanBuilderStatus = tracerStatus.buildSpan(spanContextId);
+        spanBuilderStatus.asChildOf(podStatus);
+        Span statusCondition = spanBuilder.start();
+        statusCondition.log(String.format("TransitionTime: %s", getDisplayValue(status.getLastTransitionTime())));
+        statusCondition.log(String.format("Reason: %s", getDisplayValue(status.getReason())));
+        statusCondition.log(String.format("Message: %s", getDisplayValue(status.getMessage())));
+        statusCondition.log(String.format("Status: %s", getDisplayValue(status.getStatus().toString())));
+        boolean errored = !status.getStatus();
+        if(errored && StringUtils.isNotEmpty(status.getMessage())) {
+            statusCondition.setTag(Tags.ERROR, true);
+
+        }
+        statusCondition.finish();
     }
 }

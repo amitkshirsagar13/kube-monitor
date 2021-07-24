@@ -42,15 +42,7 @@ public class PodTracer extends SpanProvider {
                 .collect(Collectors.toList());
 
         statusList.stream().forEach(status -> {
-            Tracer tracerStatus = GlobalTracer.get();
-            Tracer.SpanBuilder spanBuilderStatus = tracerStatus.buildSpan(POD.name());
-            spanBuilderStatus.asChildOf(podStatus);
-            Span statusCondition = spanBuilder.start();
-            statusCondition.log(String.format("TransitionTime: %s", getDisplayValue(status.getLastTransitionTime())));
-            statusCondition.log(String.format("Reason: %s", getDisplayValue(status.getReason())));
-            statusCondition.log(String.format("Message: %s", getDisplayValue(status.getMessage())));
-            statusCondition.log(String.format("Status: %s", getDisplayValue(status.getStatus().toString())));
-            statusCondition.finish();
+            buildStatusSpan(spanContextId, spanBuilder, podStatus, status);
         });
         podStatus.finish();
     }
