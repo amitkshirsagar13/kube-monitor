@@ -59,6 +59,7 @@ public abstract class SpanProvider {
         Tracer.SpanBuilder spanBuilderStatus = tracerStatus.buildSpan(spanContextId);
         spanBuilderStatus.asChildOf(podStatus);
         Span statusCondition = spanBuilder.start();
+        statusCondition.setOperationName(status.getType());
         statusCondition.log(String.format("TransitionTime: %s", getDisplayValue(status.getLastTransitionTime())));
         statusCondition.log(String.format("Reason: %s", getDisplayValue(status.getReason())));
         statusCondition.log(String.format("Message: %s", getDisplayValue(status.getMessage())));
