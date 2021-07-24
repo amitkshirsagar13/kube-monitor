@@ -35,7 +35,7 @@ public class PodTracer extends SpanProvider {
         final String resourceVersion = event.getMetadata().getResourceVersion();
         final List<String> imageList = event.getSpec().getContainers().stream().map(V1Container::getImage).collect(Collectors.toList());
         podStatus.setBaggageItem("Resource_Version", resourceVersion);
-        imageList.stream().forEach(image->podStatus.setBaggageItem("Image", resourceVersion));
+        imageList.stream().forEach(image->podStatus.setBaggageItem("Image", image));
 
         final List<V1Status> statusList = event.getStatus().getConditions().stream()
                 .map(v1PodCondition -> getModelMapper().map(v1PodCondition, V1Status.class))
