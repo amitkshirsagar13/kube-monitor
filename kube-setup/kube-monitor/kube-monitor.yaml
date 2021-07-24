@@ -3,25 +3,25 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: grafana
-  name: grafana
-  namespace: monitoring
+    app: kube-monitor
+  name: kube-monitor
+  namespace: kube-monitor
 spec:
   selector:
     matchLabels:
-      app: grafana
+      app: kube-monitor
   template:
     metadata:
       labels:
-        app: grafana
+        app: kube-monitor
     spec:
       securityContext:
         fsGroup: 472
         supplementalGroups:
           - 0
       containers:
-        - name: grafana
-          image: grafana/grafana:7.5.2
+        - name: kube-monitor
+          image: amitkshirsagar13/kube-monitor:latest
           imagePullPolicy: IfNotPresent
 #          ports:
 #            - containerPort: 3000
