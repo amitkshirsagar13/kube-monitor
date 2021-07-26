@@ -16,7 +16,7 @@
   ```
 - Get Pods with cpu top 5:
   ```
-  topk(5, sort_desc(sum(label_replace(container_cpu_usage_seconds_total{namespace=~"kube-monitor|echo"}, "podName",  "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (podName)/1000000))
+  topk(5, sort_desc(sum(label_replace(container_cpu_usage_seconds_total{namespace=~"kube-monitor|echo"}, "podName",  "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (podName)))
   ```
 - Get Pods with memory top 5: Not Working yet
   ```
