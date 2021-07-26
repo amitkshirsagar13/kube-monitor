@@ -169,9 +169,39 @@ spec:
           timeoutSeconds: 5
         securityContext:
           runAsUser: 65534
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
       nodeSelector:
         kubernetes.io/os: linux
       serviceAccountName: kube-state-metrics
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/version: 2.1.0
+  name: kube-state-metrics
+  namespace: monitoring
+  annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port:   '9090'
+spec:
+  selector:
+    app.kubernetes.io/name: kube-state-metrics
+  clusterIP: None
+  ports:
+  - name: http-metrics
+    port: 8080
+    targetPort: http-metrics
+  - name: telemetry
+    port: 8081
+    targetPort: telemetry
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -200,26 +230,3 @@ spec:
               number: 8081
         path: /
         pathType: Prefix
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/name: kube-state-metrics
-    app.kubernetes.io/version: 2.1.0
-  name: kube-state-metrics
-  namespace: monitoring
-  annotations:
-    prometheus.io/scrape: 'true'
-    prometheus.io/port: '8080'
-spec:
-  clusterIP: None
-  ports:
-  - name: http-metrics
-    port: 8080
-    targetPort: http-metrics
-  - name: telemetry
-    port: 8081
-    targetPort: telemetry
-  selector:
-    app.kubernetes.io/name: kube-state-metrics
