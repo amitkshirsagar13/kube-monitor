@@ -113,7 +113,7 @@ spec:
           service:
             name: prometheus-service
             port:
-              number: 8080
+              number: 9090
         path: /
         pathType: Prefix
 ---

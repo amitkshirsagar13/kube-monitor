@@ -1,5 +1,6 @@
 ## PromSQL Resource Queries
 
+
 ### Namespace Resource Stats
 - Get Namespaces with cpu:
   ```
