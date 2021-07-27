@@ -10,16 +10,34 @@
   topk(5, sort_desc(avg_over_time( sum(container_memory_usage_bytes{namespace=~"kube-monitor|echo"}) by (namespace)[5m:])/1000000))
   ```
 
-### Pods Resource Stats
+### Pods Resource Usage Stats
 - Get Pods with memory usage top 5:
   ```
   topk(5, sort_desc(avg_over_time(sum(label_replace(container_memory_working_set_bytes{namespace=~"kube-monitor|echo"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName)[5m:])/1000000))
   ```
-- Get Pods with cpu top 5:
+- Get Pods with cpu usage top 5:
   ```
   topk(5, sort_desc(sum(label_replace(container_cpu_usage_seconds_total{namespace=~"kube-monitor|echo"}, "podName",  "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName)))
   ```
-- Get Pods with memory top 5: Not Working yet
+
+### Pods Resource Request Stats
+- Get Pods with memory request top 5:
   ```
-  topk(5, sort_desc(avg_over_time(sum(label_replace(container_spec_memory_reservation_limit_bytes{namespace=~"kube-monitor|echo"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName)[5m:])/1000000))
+  topk(5, sort_desc(avg_over_time(sum(label_replace(kube_pod_container_resource_requests{namespace=~"kube-monitor|echo", resource="memory"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName)[15m:])/1000000))
+  ```
+- Get Pods with memory request top 5:
+  ```
+  topk(5, sort_desc(avg_over_time(sum(label_replace(kube_pod_container_resource_requests{namespace=~"kube-monitor|echo", resource="cpu"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName)[15m:])))
+  ```
+
+
+### Pods Restart Stats
+- Get Pods with restarts top 5:
+  ```
+  topk(5, sort_desc(sum(label_replace(kube_pod_container_status_restarts_total{namespace=~"kube-monitor|echo"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName)))
+  ```
+
+- Get Pods with restarts top 5:
+  ```
+  topk(5, sort_desc(sum(label_replace(kube_pod_container_status_waiting_reason{namespace=~"kube-monitor|echo"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (reason,namespace, podName)))
   ```
