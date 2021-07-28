@@ -17,6 +17,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 2,
+  "iteration": 1627467479075,
   "links": [],
   "panels": [
     {
@@ -1053,7 +1054,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Demo-Test",
+  "title": "Kubernetes Track Resource Stats",
   "uid": "nnvXcfZ7k",
-  "version": 17
+  "version": 18
 }
