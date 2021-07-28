@@ -35,12 +35,12 @@
 ### Pods Restart Stats
 - Get Pods with restarts top 5:
   ```
-  topk(5, sort_desc(sum(label_replace(kube_pod_container_status_restarts_total{namespace=~"kube-monitor|echo"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName)))
+  topk(5,avg(sort_desc(label_replace(kube_pod_container_status_restarts_total{namespace=~"kube-monitor|echo|kube-system"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)"))) by (namespace, podName))
   ```
 
 - Get Pods with restarts top 5:
   ```
-  topk(5, sort_desc(sum(label_replace(kube_pod_container_status_waiting_reason{namespace=~"kube-monitor|echo"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (reason,namespace, podName)))
+  topk(5,avg(sort_desc(label_replace(kube_pod_container_status_waiting_reason{namespace=~"kube-monitor|echo|kube-system"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)"))) by (namespace, podName, reason))
   ```
 
 
@@ -50,3 +50,4 @@
   topk(5, sort_desc(max(kube_persistentvolume_capacity_bytes) by (persistentvolume)))
   ```
 
+count(label_replace(kube_pod_container_status_waiting_reason{namespace=~"kube-monitor|echo"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName, reason)
