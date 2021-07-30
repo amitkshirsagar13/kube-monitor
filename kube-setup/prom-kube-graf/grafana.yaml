@@ -46,6 +46,9 @@ spec:
               port: 3000
             timeoutSeconds: 1            
           resources:
+            limits:
+              cpu: 400m
+              memory: 950Mi
             requests:
               cpu: 250m
               memory: 750Mi
