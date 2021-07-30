@@ -30,6 +30,16 @@
   topk(5, sort_desc(sum(label_replace(rate(container_cpu_usage_seconds_total{app_kubernetes_io_name="", namespace=~"kube-monitor|echo"}[1m]), "podName",  "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName)))
   ```
 
+### Pods Resource Waste
+- Get Pods wasting most memory top 5:
+  ```
+  topk(5, sort_desc((sum(label_replace(kube_pod_container_resource_requests{app_kubernetes_io_name="", namespace=~"kube-monitor|echo", resource="memory"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName)) - (sum(label_replace(container_memory_working_set_bytes{container="", namespace=~"kube-monitor|echo"}, "podName",  "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName)))
+  ```
+- Get Pods wasting most cpu top 5:
+  ```
+  topk(5, sort_desc((sum(label_replace(kube_pod_container_resource_requests{app_kubernetes_io_name="", namespace=~"kube-monitor|echo", resource="cpu"}, "podName", "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName)) - (sum(label_replace(rate(container_cpu_usage_seconds_total{app_kubernetes_io_name="", namespace=~"kube-monitor|echo"}[1m]), "podName",  "$1$3", "pod", "(.*)(-.{9,10}-.{5})|(.*)")) by (namespace, podName))))
+  ```
+
 
 ### Pods Restart Stats
 - Get Pods with restarts top 5:
